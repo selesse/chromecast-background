@@ -1,0 +1,3 @@
+rootProject.name = 'chromecast-background'
+
+include 'app'

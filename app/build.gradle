@@ -1,0 +1,22 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.aetrion.flickr:flickrapi:1.1'
+    compile 'net.dean.jraw:JRAW:0.8.0'
+    compile 'org.slf4j:slf4j-api:1.7.18'
+    runtime 'org.slf4j:slf4j-simple:1.7.18'
+
+    testCompile 'junit:junit:4.12'
+}
+
+def config = new ConfigSlurper().parse(new File("$rootDir/gradle/config/secrets.gradle").toURL())
+mainClassName = 'com.selesse.chromecast.background.Main'
+applicationDefaultJvmArgs = [
+        "-DREDDIT_CLIENT_ID=${config.reddit.client_id}",
+        "-DREDDIT_CLIENT_SECRET=${config.reddit.client_secret}"
+]
