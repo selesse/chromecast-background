@@ -1,6 +1,7 @@
 package com.selesse.chromecast.background.images;
 
 import com.google.common.io.Resources;
+import com.selesse.chromecast.background.model.QuotedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,13 +13,14 @@ import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 
 public class ImageCaptioner {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageCaptioner.class);
 
-    public void captionImage(String caption, File imagePath, File outputFile) throws IOException, FontFormatException {
+    public void captionImage(String caption, File imagePath, File outputFile) throws IOException {
         BufferedImage image = ImageIO.read(imagePath);
 
         Graphics graphics = image.getGraphics();
@@ -26,7 +28,7 @@ public class ImageCaptioner {
 
         int width = image.getWidth();
         int height = image.getHeight();
-        float fontSize = height / 30f;
+        float fontSize = height / 20f;
         LOGGER.info("Image was {} x {}, setting font size to {}", width, height, fontSize);
         graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -65,11 +67,25 @@ public class ImageCaptioner {
             drawPosY += layout.getDescent() + layout.getLeading();
         }
 
-        ImageIO.write(image, "png", outputFile);
+        ImageIO.write(image, "jpg", outputFile);
     }
 
-    private Font createRobotoFont(float fontSize) throws IOException, FontFormatException {
-        Font font = Font.createFont(Font.PLAIN, new File(Resources.getResource("Roboto-Regular.ttf").getFile()));
-        return font.deriveFont(fontSize);
+    private Font createRobotoFont(float fontSize) throws IOException {
+        try {
+            Font font = Font.createFont(Font.PLAIN, new File(Resources.getResource("Roboto-Regular.ttf").getFile()));
+            return font.deriveFont(fontSize);
+        } catch (FontFormatException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public File captionImage(QuotedImage quotedImage) throws IOException {
+        BufferedImage inputImage = ImageIO.read(new URL(quotedImage.getImgUrl()));
+        File inputFile = File.createTempFile("input", ".png");
+        ImageIO.write(inputImage, "png", inputFile);
+
+        File outputFile = File.createTempFile("output", ".jpg");
+        captionImage(quotedImage.getText(), inputFile, outputFile);
+        return outputFile;
     }
 }

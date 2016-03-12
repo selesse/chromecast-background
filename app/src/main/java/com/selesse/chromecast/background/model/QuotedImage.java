@@ -11,6 +11,14 @@ public class QuotedImage {
         this.imgUrl = imgUrl;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
