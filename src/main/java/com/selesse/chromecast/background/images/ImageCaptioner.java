@@ -12,6 +12,7 @@ import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -69,12 +70,10 @@ public class ImageCaptioner {
         ImageIO.write(image, "jpg", outputFile);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private Font createRobotoFont(float fontSize) throws IOException {
         try {
-            Font font = Font.createFont(Font.PLAIN, new File(
-                    getClass().getClassLoader().getResource("Roboto-Regular.ttf").getFile())
-            );
+            InputStream fontResource = getClass().getClassLoader().getResourceAsStream("/Roboto-Regular.ttf");
+            Font font = Font.createFont(Font.PLAIN, fontResource);
             return font.deriveFont(fontSize);
         } catch (FontFormatException e) {
             throw new RuntimeException(e);
