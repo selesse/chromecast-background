@@ -8,6 +8,9 @@ public class QuotedImage {
 
     public QuotedImage(String text, String imgUrl) {
         this.text = text;
+        if (!imgUrl.endsWith(".png") || !imgUrl.endsWith(".jpg")) {
+            imgUrl += ".png";
+        }
         this.imgUrl = imgUrl;
     }
 
