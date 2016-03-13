@@ -1,5 +1,6 @@
 package com.selesse.chromecast.background.images;
 
+import com.google.common.io.Resources;
 import com.selesse.chromecast.background.model.QuotedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class ImageCaptioner {
 
     private Font createRobotoFont(float fontSize) throws IOException {
         try {
-            InputStream fontResource = getClass().getClassLoader().getResourceAsStream("/Roboto-Regular.ttf");
+            InputStream fontResource = Resources.getResource("Roboto-Regular.ttf").openStream();
             Font font = Font.createFont(Font.PLAIN, fontResource);
             return font.deriveFont(fontSize);
         } catch (FontFormatException e) {
